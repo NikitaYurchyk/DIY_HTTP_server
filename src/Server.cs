@@ -19,7 +19,7 @@ int indexOfSlash = data.IndexOf('/');
 
 
 
-if (data[5] != ' ')
+if (data[indexOfSlash + 1] != ' ')
 {
  client.Send(failMsg);
 }
