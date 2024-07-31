@@ -19,21 +19,16 @@ string data = Encoding.UTF8.GetString(buffer);
 
 
 string[] listOfWords = data.Split("\r\n");
-Console.WriteLine("Check request");
-foreach (var word in listOfWords)
-{
- Console.WriteLine(word);
-}
-
-
-
 
 var firstLine = listOfWords[0].Split(" ");
+
+
 if (firstLine[1] == "/")
 {
  byte[] theWholeResp = Encoding.UTF8.GetBytes($"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 0\r\n\r\n");
  client.Send(theWholeResp);
 }
+
 else if (firstLine[1].Contains("/echo/"))
 {
  int index = firstLine[1].IndexOf('o');
@@ -46,10 +41,11 @@ else if (firstLine[1].Contains("/echo/"))
  byte[] encrypResp = Encoding.UTF8.GetBytes(resp);
  client.Send(encrypResp);
 }
+
 else if (firstLine[1].Contains("/user-agent"))
 {
- var partWithUserAgent = listOfWords[3].Split(" ");
- string resp = $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {partWithUserAgent[1].Length}\r\n\r\n{partWithUserAgent[1]}";
+ var partWithUserAgent = listOfWords[2].Split(" ");
+ string resp = $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {partWithUserAgent[1].Length}\r\n\r\n{partWithUserAgent[1]}\r\n\r\n";
  client.Send(Encoding.UTF8.GetBytes(resp));
 
 }
