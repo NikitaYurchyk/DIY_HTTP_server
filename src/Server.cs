@@ -19,6 +19,7 @@ string data = Encoding.UTF8.GetString(buffer);
 
 
 string[] listOfWords = data.Split("\r\n");
+Console.WriteLine("Check request");
 foreach (var word in listOfWords)
 {
  Console.WriteLine(word);
@@ -41,10 +42,16 @@ else if (firstLine[1].Contains("/echo/"))
  {
   body += firstLine[1][i];
  }
-
  string resp = $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {body.Length}\r\n\r\n{body}";
  byte[] encrypResp = Encoding.UTF8.GetBytes(resp);
  client.Send(encrypResp);
+}
+else if (firstLine[1].Contains("/user-agent"))
+{
+ var partWithUserAgent = listOfWords[3].Split(" ");
+ string resp = $"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {partWithUserAgent[1].Length}\r\n\r\n{partWithUserAgent[1]}";
+ client.Send(Encoding.UTF8.GetBytes(resp));
+
 }
 else
 {
