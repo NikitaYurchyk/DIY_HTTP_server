@@ -41,9 +41,15 @@ async Task HttpClientHandler(TcpClient client) {
         body += firstLine[1][i];
       }
 
-      if (encoding.Length > 1 && encoding[1] == "gzip")
+      bool checkValidEncoding = false;
+      foreach (var i in encoding)
       {
-        string resp = $"HTTP/1.1 200 OK\r\nContent-Encoding: {encoding[1]}\r\nContent-Type: text/plain\r\nContent-Length: {body.Length}\r\n\r\n{body}";
+        if (i.Contains("gzip"))
+          checkValidEncoding = true;
+      }
+      if (encoding.Length > 1 && checkValidEncoding)
+      {
+        string resp = $"HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Type: text/plain\r\nContent-Length: {body.Length}\r\n\r\n{body}";
         byte[] encrypResp = Encoding.UTF8.GetBytes(resp);
         await client.Client.SendAsync(encrypResp);
       }
